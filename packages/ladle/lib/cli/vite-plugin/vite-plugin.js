@@ -111,6 +111,7 @@ function ladlePlugin(config, configFolder, mode) {
               Array.isArray(config.stories) ? config.stories : [config.stories],
             ),
           );
+
           detectDuplicateStoryNames(entryData);
           return await getGeneratedList(entryData, configFolder, config);
         } catch (/** @type {any} */ e) {
