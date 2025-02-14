@@ -11,6 +11,7 @@ const getMeta = async (params = {}) => {
     await globby(
       Array.isArray(config.stories) ? config.stories : [config.stories],
     ),
+    !!config.packages?.length
   );
   const meta = getMetaJson(entryData);
   return meta;

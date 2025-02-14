@@ -12,9 +12,9 @@ import getComponentsImport from "./get-components-import.js";
 const getGeneratedList = async (entryData, configFolder, config) => {
   return `
 ${getStoryImports(entryData)}
-${getStoryList(entryData)}
+${getStoryList(entryData, config)}
 ${await getConfigImport(configFolder, config)}
-${getComponentsImport(configFolder)}
+${getComponentsImport(configFolder, config)}
 ${getStorySource(entryData, config.addons.source.enabled)}
 export const errorMessage = '';\n
 `;

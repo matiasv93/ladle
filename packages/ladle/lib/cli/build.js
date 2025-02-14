@@ -25,6 +25,7 @@ const build = async (params = {}) => {
     await globby(
       Array.isArray(config.stories) ? config.stories : [config.stories],
     ),
+    !!config.packages?.length
   );
   const jsonContent = getMetaJsonString(entryData);
   await fs.writeFile(

@@ -11,6 +11,7 @@ import mergeViteConfigs from "./merge-vite-configs.js";
 import getUserViteConfig from "./get-user-vite-config.js";
 import mdxPlugin from "./vite-plugin/mdx-plugin.js";
 import copyMswWorker from "./copy-msw-worker.js";
+import { removePackageSegment } from "./vite-plugin/naming-utils.js";
 
 /**
  * @param ladleConfig {import("../shared/types").Config}
@@ -170,7 +171,9 @@ const getBaseViteConfig = async (ladleConfig, configFolder, viteConfig) => {
       !hasTSConfigPathPlugin &&
         !process.versions.pnp &&
         tsconfigPaths({
-          root: process.cwd(),
+          root: !!ladleConfig.packages?.length
+            ? removePackageSegment(process.cwd())
+            : process.cwd(),
         }),
       ladlePlugin(ladleConfig, configFolder, viteConfig.mode || ""),
       !hasReactPlugin && !hasReactSwcPlugin && react(),

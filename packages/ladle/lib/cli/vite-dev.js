@@ -70,6 +70,7 @@ const bundler = async (config, configFolder) => {
           await globby(
             Array.isArray(config.stories) ? config.stories : [config.stories],
           ),
+          !!config.packages?.length,
         );
         const jsonContent = getMetaJsonObject(entryData);
         ctx.body = jsonContent;
@@ -178,6 +179,7 @@ const bundler = async (config, configFolder) => {
             await globby(
               Array.isArray(config.stories) ? config.stories : [config.stories],
             ),
+            !!config.packages?.length,
           );
           const jsonContent = getMetaJsonObject(entryData);
           // loc changes should not grant a full reload

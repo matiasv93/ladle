@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import debugFactory from "debug";
 import { traverse } from "../babel.js";
-import { getFileId } from "../naming-utils.js";
+import { getFileId, getPackageNameFromStory } from "../naming-utils.js";
 import getAst from "../get-ast.js";
 import getDefaultExport from "./get-default-export.js";
 import getStorynameAndMeta from "./get-storyname-and-meta.js";
@@ -14,8 +14,9 @@ const debug = debugFactory("ladle:vite");
 
 /**
  * @param {string[]} entries
+ * @param {boolean} hasPackages
  */
-export const getEntryData = async (entries) => {
+export const getEntryData = async (entries, hasPackages) => {
   /**
    * @type {import('../../../shared/types').EntryData}
    */
@@ -23,15 +24,16 @@ export const getEntryData = async (entries) => {
   entries.sort();
   for (let entry of entries) {
     debug(`Parsing ${entry}`);
-    entryData[entry] = await getSingleEntry(entry);
+    entryData[entry] = await getSingleEntry(entry, hasPackages);
   }
   return entryData;
 };
 
 /**
  * @param {string} entry
+ * @param {boolean} hasPackages
  */
-export const getSingleEntry = async (entry) => {
+export const getSingleEntry = async (entry, hasPackages) => {
   // fs.promises.readFile is much slower and we don't mind hogging
   // the whole CPU core since this is blocking everything else
   const fileCode = fs.readFileSync(path.join(IMPORT_ROOT, entry), "utf8");
@@ -45,6 +47,7 @@ export const getSingleEntry = async (entry) => {
     exportDefaultProps: { title: undefined, meta: undefined },
     namedExportToMeta: {},
     namedExportToStoryName: {},
+    packageName: hasPackages? getPackageNameFromStory(entry) : "",
     storyParams: {},
     //@ts-ignore
     storySource: code.replace(/\r/g, ""),
