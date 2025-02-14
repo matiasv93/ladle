@@ -1,25 +1,34 @@
 import t from "@babel/types";
 import { template, generate } from "../babel.js";
-import { storyDelimiter, storyEncodeDelimiter } from "../naming-utils.js";
+import {
+  storyDelimiter,
+  storyEncodeDelimiter,
+  getPackageNameFromStory,
+} from "../naming-utils.js";
 
 /**
  * @param entryData {import('../../../shared/types').EntryData}
+ * @param config {import("../../../shared/types").Config}
  */
-const getStoryList = (entryData) => {
+const getStoryList = (entryData, config) => {
   /** @type {string[]} */
   let storyIds = [];
   /** @type {{[key: string]: any}} */
   let storyParams = {};
-  /** @type {{[key: string]: { locStart: number; locEnd: number; entry: string;}}} */
+  /** @type {{[key: string]: { locStart: number; locEnd: number; entry: string; packageName: string;}}} */
   let storyLocs = {};
+  const hasPackages = !!config.packages?.length
 
   Object.keys(entryData).forEach((entry) => {
+    const packageName = hasPackages ? getPackageNameFromStory(entryData[entry].entry) : "";
+
     entryData[entry].stories.forEach(({ storyId, locStart, locEnd }) => {
       storyIds.push(storyId);
       storyLocs[storyId] = {
         locStart,
         locEnd,
         entry,
+        packageName,
       };
     });
     storyParams = { ...storyParams, ...entryData[entry].storyParams };
@@ -64,6 +73,10 @@ const getStoryList = (entryData) => {
                   t.objectProperty(
                     t.identifier("entry"),
                     t.stringLiteral(storyLocs[story].entry),
+                  ),
+                  t.objectProperty(
+                    t.identifier("packageName"),
+                    t.stringLiteral(storyLocs[story].packageName),
                   ),
                   ...(paramsAst ? [paramsAst] : []),
                 ]),

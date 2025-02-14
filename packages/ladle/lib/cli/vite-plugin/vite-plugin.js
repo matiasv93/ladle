@@ -110,6 +110,7 @@ function ladlePlugin(config, configFolder, mode) {
             await globby(
               Array.isArray(config.stories) ? config.stories : [config.stories],
             ),
+            !!config.packages?.length,
           );
           detectDuplicateStoryNames(entryData);
           return await getGeneratedList(entryData, configFolder, config);

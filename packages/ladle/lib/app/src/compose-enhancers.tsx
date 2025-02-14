@@ -1,8 +1,9 @@
 import * as React from "react";
 import ArgsProvider from "./args-provider";
 import Msw from "./msw";
-import { args, argTypes } from "virtual:generated-list";
+import * as VGeneratedList from "virtual:generated-list";
 import { useLadleContext } from "./context";
+import { sanitizeAndPascalCase } from "./package-name";
 import type { StoryDecorator } from "../../shared/types";
 import type { RequestHandler } from "msw";
 
@@ -16,21 +17,6 @@ export default function composeEnhancers(module: any, storyName: string) {
   if (module[storyName] && module[storyName].msw) {
     mswHandlers = module[storyName].msw;
   }
-  const props = {
-    args: {
-      ...args,
-      ...(module.default && module.default.args ? module.default.args : {}),
-      ...(module[storyName].args ? module[storyName].args : {}),
-    },
-    argTypes: {
-      ...argTypes,
-      ...(module.default && module.default.argTypes
-        ? module.default.argTypes
-        : {}),
-      ...(module[storyName].argTypes ? module[storyName].argTypes : {}),
-    },
-    component: module[storyName],
-  };
   if (module[storyName] && Array.isArray(module[storyName].decorators)) {
     decorators = [...decorators, ...module[storyName].decorators];
   }
@@ -46,6 +32,32 @@ export default function composeEnhancers(module: any, storyName: string) {
 
   return function RenderDecoratedStory() {
     const { globalState } = useLadleContext();
+    const packageName = sanitizeAndPascalCase(globalState.package);
+    const args =
+      (VGeneratedList as VGeneratedList.VGeneratedListType)[
+        `${packageName}args`
+      ] || VGeneratedList["args"];
+    const argTypes =
+      (VGeneratedList as VGeneratedList.VGeneratedListType)[
+        `${packageName}argTypes`
+      ] || VGeneratedList["argTypes"];
+
+    const props = {
+      args: {
+        ...args,
+        ...(module.default && module.default.args ? module.default.args : {}),
+        ...(module[storyName].args ? module[storyName].args : {}),
+      },
+      argTypes: {
+        ...argTypes,
+        ...(module.default && module.default.argTypes
+          ? module.default.argTypes
+          : {}),
+        ...(module[storyName].argTypes ? module[storyName].argTypes : {}),
+      },
+      component: module[storyName],
+    };
+
     const WithArgs = React.useMemo(
       () =>
         function RenderWithArgs() {
@@ -55,7 +67,7 @@ export default function composeEnhancers(module: any, storyName: string) {
             </Msw>
           );
         },
-      [],
+      [packageName],
     );
     if (decorators.length === 0) return <WithArgs />;
     const getBindedDecorator = (i: number) => {
