@@ -31,13 +31,9 @@ export const Button = ({ globalState, dispatch }: AddonProps) => {
     setShowPackages(false);
   };
 
-  useHotkeys(
-    config.hotkeys.packages,
-    () => setShowPackages(!showPackages),
-    {
-      enabled: !!globalState.package && config.addons.packages.enabled,
-    },
-  );
+  useHotkeys(config.hotkeys.package, () => setShowPackages(!showPackages), {
+    enabled: !!globalState.package && config.addons.package.enabled,
+  });
 
   return (
     <li>
@@ -58,7 +54,7 @@ export const Button = ({ globalState, dispatch }: AddonProps) => {
           label="Dialog to select the package"
         >
           <div className="ladle-packages-list">
-            {config.addons.packages?.options?.map((pName) => (
+            {config.addons.package?.options?.map((pName) => (
               <button
                 key={pName}
                 onClick={() => handlePackage(pName)}

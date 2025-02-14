@@ -63,7 +63,7 @@ const generateExports = (configFolder, config) => {
    * @type {string[]}
    */
   const exports = [];
-  config.addons.packages?.options?.forEach((pkg) => {
+  config.addons.package?.options?.forEach((pkg) => {
     const pkgPath = updatePath(configFolder, pkg);
 
     const componentsPaths = [

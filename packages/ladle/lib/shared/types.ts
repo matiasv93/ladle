@@ -213,12 +213,12 @@ export type Config = {
     a11y: string[];
     source: string[];
     darkMode: string[];
-    packages: string[];
+    package: string[];
   };
   onDevServerStart: (serverUrl: string) => void;
   i18n: { [key: string]: string };
   addons: {
-    packages: {
+    package: {
       enabled: boolean;
       options?: PackageOptions;
       defaultState: string;

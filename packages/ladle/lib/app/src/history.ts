@@ -34,6 +34,7 @@ export const modifyParams = (globalState: GlobalState) => {
       userQueryParams[key] = queryParams[key] as string;
     }
   });
+
   const params = {
     ...userQueryParams,
     mode: globalState.mode,
@@ -43,6 +44,7 @@ export const modifyParams = (globalState: GlobalState) => {
     theme: globalState.theme,
     width: globalState.width,
     control: globalState.control,
+    package: globalState.package,
   };
   removeDefaultValues(params);
   if (location.search !== getHref(params)) {

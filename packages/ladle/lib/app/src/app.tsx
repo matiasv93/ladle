@@ -26,7 +26,7 @@ import { getQuery as getQueryRtl } from "./addons/rtl";
 import { getQuery as getQuerySource } from "./addons/source";
 import { getQuery as getQueryControl } from "./addons/control";
 import { getQuery as getQueryWidth } from "./addons/width";
-import { getQuery as getQueryPackage } from "./addons/packages";
+import { getQuery as getQueryPackage } from "./addons/package";
 import { Context } from "./context";
 import {
   getQueryStory,
@@ -54,8 +54,8 @@ const getUrlState = (
   controlInitialized: false,
   package: getQueryPackage(
     search,
-    config.addons.packages.enabled && config.addons.packages?.options
-      ? config.addons.packages?.options
+    config.addons.package.enabled && config.addons.package?.options
+      ? config.addons.package?.options
       : undefined,
   ),
   hotkeys: true,

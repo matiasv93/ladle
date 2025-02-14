@@ -29,7 +29,7 @@ export default {
     rtl: ["r"],
     source: ["s"],
     a11y: ["a"],
-    packages: ["p"],
+    package: ["p"],
   },
   onDevServerStart: () => {
     return;
@@ -39,7 +39,7 @@ export default {
   },
   // enable/disable addons and their default state
   addons: {
-    packages: {
+    package: {
       enabled: false,
       defaultState: "",
     },
